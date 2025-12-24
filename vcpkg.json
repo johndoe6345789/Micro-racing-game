@@ -1,0 +1,12 @@
+{
+  "name": "micro-racing-game",
+  "version": "1.0.0",
+  "description": "Top down SDL3 Micro machine/car racing game",
+  "dependencies": [
+    "sdl3",
+    "sdl3-image",
+    "sdl3-ttf",
+    "nlohmann-json"
+  ],
+  "builtin-baseline": "7ba289c81f04e3cb3d97cbe5ff828ecc710c66be"
+}
