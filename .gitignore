@@ -45,6 +45,12 @@ build/
 out/
 cmake-build-*/
 
+# Conan
+conan_install/
+conaninfo.txt
+conanbuildinfo.*
+graph_info.json
+
 # vcpkg
 vcpkg_installed/
 

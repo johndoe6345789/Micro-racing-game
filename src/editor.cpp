@@ -1,6 +1,5 @@
 #include "editor.h"
 #include <iostream>
-#include <chrono>
 
 Editor::Editor()
     : window(nullptr)
@@ -20,14 +19,13 @@ Editor::~Editor() {
 }
 
 bool Editor::initialize() {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
         return false;
     }
     
     window = SDL_CreateWindow(
         "Track Editor - Micro Racing Game",
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         screenWidth, screenHeight,
         SDL_WINDOW_RESIZABLE
     );
@@ -37,7 +35,7 @@ bool Editor::initialize() {
         return false;
     }
     
-    sdlRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    sdlRenderer = SDL_CreateRenderer(window, nullptr);
     if (!sdlRenderer) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
         return false;
@@ -73,11 +71,11 @@ void Editor::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
-            case SDL_QUIT:
+            case SDL_EVENT_QUIT:
                 running = false;
                 break;
                 
-            case SDL_MOUSEBUTTONDOWN:
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     handleMouseClick(event.button.x, event.button.y, false);
                 } else if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -85,7 +83,7 @@ void Editor::handleEvents() {
                 }
                 break;
                 
-            case SDL_MOUSEMOTION:
+            case SDL_EVENT_MOUSE_MOTION:
                 mouseX = event.motion.x;
                 mouseY = event.motion.y;
                 
@@ -97,8 +95,8 @@ void Editor::handleEvents() {
                 }
                 break;
                 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym) {
+            case SDL_EVENT_KEY_DOWN:
+                switch (event.key.key) {
                     case SDLK_1:
                         currentTool = EditorTool::PLACE_TRACK;
                         break;
@@ -119,12 +117,12 @@ void Editor::handleEvents() {
                         isDragging = true;
                         break;
                     case SDLK_S:
-                        if (SDL_GetModState() & KMOD_CTRL) {
+                        if (SDL_GetModState() & SDL_KMOD_CTRL) {
                             saveTrack();
                         }
                         break;
                     case SDLK_L:
-                        if (SDL_GetModState() & KMOD_CTRL) {
+                        if (SDL_GetModState() & SDL_KMOD_CTRL) {
                             loadTrack();
                         }
                         break;
@@ -134,8 +132,8 @@ void Editor::handleEvents() {
                 }
                 break;
                 
-            case SDL_KEYUP:
-                if (event.key.keysym.sym == SDLK_SPACE) {
+            case SDL_EVENT_KEY_UP:
+                if (event.key.key == SDLK_SPACE) {
                     isDragging = false;
                 }
                 break;

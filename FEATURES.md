@@ -13,8 +13,8 @@
 - Docker integration for cross-platform validation
 
 ### ✅ C++ Package Manager
-- vcpkg integration for dependency management
-- Configured in vcpkg.json with all required packages
+- Conan integration for dependency management
+- Configured in conanfile.txt with all required packages
 - Automatic dependency resolution during build
 
 ### ✅ Ninja
@@ -111,20 +111,20 @@
 - Easy to extend with new tile types
 
 ### Rendering
-- SDL2-based graphics
+- SDL3-based graphics
 - Primitive shape rendering (lines, rectangles, circles, polygons)
 - Text rendering placeholder (ready for SDL_ttf integration)
 - Color-coded tile types for visual distinction
 
 ### Input Handling
-- Keyboard input with SDL2
+- Keyboard input with SDL3
 - Support for both Arrow keys and WASD
 - Virtual input class allows for AI bot simulation
 - Event-driven architecture
 
 ### Build System
 - CMake 3.20+ with modern syntax
-- vcpkg toolchain integration
+- Conan toolchain integration
 - Separate executables for game and editor
 - Asset copying to build directory
 - Install targets configured
@@ -152,7 +152,7 @@
 
 ### Build Configuration
 - CMakeLists.txt - Build system configuration
-- vcpkg.json - Package dependencies
+- conanfile.txt - Package dependencies
 - .github/workflows/build.yml - CI/CD pipeline
 
 ### Documentation

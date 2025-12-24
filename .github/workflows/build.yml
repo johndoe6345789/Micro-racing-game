@@ -46,14 +46,23 @@ jobs:
       run: |
         choco install ninja
     
-    - name: Setup vcpkg
-      uses: lukka/run-vcpkg@v11
+    - name: Install Python
+      uses: actions/setup-python@v5
       with:
-        vcpkgGitCommitId: '7ba289c81f04e3cb3d97cbe5ff828ecc710c66be'
+        python-version: '3.x'
+    
+    - name: Install Conan
+      run: |
+        pip install conan
+        conan profile detect --force
+    
+    - name: Install dependencies with Conan
+      run: |
+        conan install . --output-folder=build --build=missing -s build_type=Release
     
     - name: Configure CMake
       run: |
-        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
+        cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
     
     - name: Build
       run: cmake --build build --config Release

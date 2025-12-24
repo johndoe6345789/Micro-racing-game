@@ -1,16 +1,8 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include <string>
-
-// SDL_FPoint compatibility for older SDL2 versions
-#ifndef SDL_FPoint
-struct SDL_FPoint {
-    float x;
-    float y;
-};
-#endif
 
 class Renderer {
 public:

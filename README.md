@@ -1,6 +1,6 @@
 # Micro Racing Game
 
-A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with SDL2 and C++.
+A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with SDL3 and C++.
 
 ## Features
 
@@ -22,14 +22,15 @@ A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with 
 
 - CMake 3.20+
 - Ninja build system
-- vcpkg (for dependency management)
+- Conan (for dependency management)
+- Python 3.x (for Conan)
 - C++17 compatible compiler
 
-### Dependencies (managed by vcpkg)
+### Dependencies (managed by Conan)
 
-- SDL2
-- SDL2_image
-- SDL2_ttf
+- SDL3
+- SDL_image
+- SDL_ttf
 - nlohmann_json
 
 ### Build Instructions
@@ -39,8 +40,17 @@ A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with 
 git clone https://github.com/johndoe6345789/Micro-racing-game.git
 cd Micro-racing-game
 
+# Install Conan if not already installed
+pip install conan
+
+# Detect Conan profile
+conan profile detect --force
+
+# Install dependencies
+conan install . --output-folder=build --build=missing -s build_type=Release
+
 # Configure with CMake (using Ninja generator)
-cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake
 
 # Build
 cmake --build build
