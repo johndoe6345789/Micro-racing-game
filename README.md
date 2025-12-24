@@ -114,6 +114,16 @@ The project includes GitHub Actions workflows for:
 - QEMU-based cross-compilation testing
 - Automated artifact generation
 
+### Workflow diagnostics
+
+Use the helper script to quickly triage common GitHub Actions pitfalls and version drift:
+
+```bash
+python tools/workflow_diagnose.py --workflows-dir .github/workflows
+```
+
+The script reports missing permissions blocks, floating action references, and other issues that routinely break CI. It installs `pyyaml` automatically if needed.
+
 ## Project Structure
 
 ```
