@@ -6,15 +6,16 @@
 class Input {
 public:
     Input();
+    virtual ~Input() = default;
     
-    void handleEvent(const SDL_Event& event);
+    virtual void handleEvent(const SDL_Event& event);
     
-    bool isForward() const;
-    bool isBackward() const;
-    bool isLeft() const;
-    bool isRight() const;
+    virtual bool isForward() const;
+    virtual bool isBackward() const;
+    virtual bool isLeft() const;
+    virtual bool isRight() const;
     
-private:
+protected:
     const Uint8* keyState;
 };
 
