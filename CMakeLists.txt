@@ -54,6 +54,8 @@ add_executable(map_editor
     src/editor.h
     src/track.cpp
     src/track.h
+    src/camera.cpp
+    src/camera.h
     src/renderer.cpp
     src/renderer.h
     src/input.cpp

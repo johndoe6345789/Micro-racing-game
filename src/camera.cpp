@@ -31,10 +31,10 @@ void Camera::update(float deltaTime) {
 }
 
 void Camera::apply(SDL_Renderer* renderer) {
-    // In SDL3, we would use SDL_RenderSetViewport and transforms
-    // For simplicity, we'll handle camera offset in render code
+    // For SDL2, camera offset is handled in render code
+    // by subtracting camera position from world coordinates
 }
 
 void Camera::reset(SDL_Renderer* renderer) {
-    // Reset viewport/transform if needed
+    // Reset viewport if needed
 }
