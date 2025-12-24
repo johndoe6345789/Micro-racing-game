@@ -1,7 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <SDL3/SDL.h>
 #include <memory>
 #include <vector>
 #include "menu.h"
@@ -11,6 +10,7 @@
 #include "ai_bot.h"
 #include "renderer.h"
 #include "input.h"
+#include "frontend.h"
 
 enum class GameState {
     MENU,
@@ -34,9 +34,7 @@ private:
     void update(float deltaTime);
     void render();
     
-    SDL_Window* window;
-    SDL_Renderer* sdlRenderer;
-    
+    std::unique_ptr<Frontend> frontend;
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<Menu> menu;
     std::unique_ptr<Input> input;
