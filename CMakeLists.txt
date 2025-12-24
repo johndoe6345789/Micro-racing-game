@@ -37,6 +37,8 @@ add_executable(racing_game
     src/renderer.h
     src/input.cpp
     src/input.h
+    src/frontend.cpp
+    src/frontend.h
 )
 
 target_link_libraries(racing_game PRIVATE

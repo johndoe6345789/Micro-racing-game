@@ -2,10 +2,8 @@
 #include <iostream>
 #include <chrono>
 
-Game::Game() 
-    : window(nullptr)
-    , sdlRenderer(nullptr)
-    , state(GameState::MENU)
+Game::Game()
+    : state(GameState::MENU)
     , running(false)
     , screenWidth(1280)
     , screenHeight(720)
@@ -19,30 +17,17 @@ Game::~Game() {
 }
 
 bool Game::initialize() {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
+    frontend = std::make_unique<SDLFrontend>();
+    if (!frontend->initialize()) {
         return false;
     }
-    
-    window = SDL_CreateWindow(
-        "Micro Racing Game",
-        screenWidth, screenHeight,
-        SDL_WINDOW_RESIZABLE
-    );
-    
-    if (!window) {
-        std::cerr << "Window creation failed: " << SDL_GetError() << std::endl;
-        return false;
-    }
-    
-    sdlRenderer = SDL_CreateRenderer(window, nullptr);
-    if (!sdlRenderer) {
-        std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
+
+    if (!frontend->createWindow("Micro Racing Game", screenWidth, screenHeight, true)) {
         return false;
     }
     
     // Initialize subsystems
-    renderer = std::make_unique<Renderer>(sdlRenderer);
+    renderer = std::make_unique<Renderer>(frontend->getRenderer());
     menu = std::make_unique<Menu>(renderer.get());
     input = std::make_unique<Input>();
     camera = std::make_unique<Camera>(screenWidth, screenHeight);
@@ -53,7 +38,7 @@ bool Game::initialize() {
 
 void Game::run() {
     auto lastTime = std::chrono::high_resolution_clock::now();
-    
+
     while (running) {
         auto currentTime = std::chrono::high_resolution_clock::now();
         float deltaTime = std::chrono::duration<float>(currentTime - lastTime).count();
@@ -61,18 +46,18 @@ void Game::run() {
         
         // Cap delta time to avoid large jumps
         if (deltaTime > 0.1f) deltaTime = 0.1f;
-        
+
         handleEvents();
         update(deltaTime);
         render();
-        
-        SDL_Delay(1); // Small delay to prevent 100% CPU usage
+
+        frontend->delay(1); // Small delay to prevent 100% CPU usage
     }
 }
 
 void Game::handleEvents() {
     SDL_Event event;
-    while (SDL_PollEvent(&event)) {
+    while (frontend->pollEvent(event)) {
         if (event.type == SDL_EVENT_QUIT) {
             running = false;
             return;
@@ -137,15 +122,14 @@ void Game::update(float deltaTime) {
 }
 
 void Game::render() {
-    SDL_SetRenderDrawColor(sdlRenderer, 20, 20, 20, 255);
-    SDL_RenderClear(sdlRenderer);
+    frontend->clear(20, 20, 20, 255);
     
     if (state == GameState::MENU) {
         menu->render();
     } else if (state == GameState::PLAYING || state == GameState::PAUSED) {
         if (track && playerCar) {
             // Apply camera transform
-            camera->apply(sdlRenderer);
+            camera->apply(frontend->getRenderer());
             
             // Render track
             track->render(*renderer, *camera);
@@ -157,7 +141,7 @@ void Game::render() {
             }
             
             // Reset camera transform
-            camera->reset(sdlRenderer);
+            camera->reset(frontend->getRenderer());
             
             // Render UI
             renderer->renderText("Lap: 1/3", 10, 10, 255, 255, 255);
@@ -168,8 +152,8 @@ void Game::render() {
             }
         }
     }
-    
-    SDL_RenderPresent(sdlRenderer);
+
+    frontend->present();
 }
 
 void Game::startGame(const std::string& trackName) {
@@ -207,15 +191,8 @@ void Game::returnToMenu() {
 }
 
 void Game::cleanup() {
-    if (sdlRenderer) {
-        SDL_DestroyRenderer(sdlRenderer);
-        sdlRenderer = nullptr;
+    if (frontend) {
+        frontend->cleanup();
+        frontend.reset();
     }
-    
-    if (window) {
-        SDL_DestroyWindow(window);
-        window = nullptr;
-    }
-    
-    SDL_Quit();
 }
