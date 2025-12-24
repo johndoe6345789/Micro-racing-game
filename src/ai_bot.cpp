@@ -32,9 +32,6 @@ AIBot::AIBot(float x, float y, int difficulty)
 void AIBot::update(float deltaTime, const Track& track) {
     updateWaypoint(track);
     
-    // Create simulated input for AI
-    Input aiInput;
-    
     // Calculate direction to target
     float dx = targetX - car->getX();
     float dy = targetY - car->getY();
