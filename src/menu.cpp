@@ -13,8 +13,8 @@ Menu::Menu(Renderer* renderer)
 }
 
 void Menu::handleEvent(const SDL_Event& event) {
-    if (event.type == SDL_EVENT_KEY_DOWN) {
-        switch (event.key.key) {
+    if (event.type == SDL_KEYDOWN) {
+        switch (event.key.keysym.sym) {
             case SDLK_UP:
             case SDLK_W:
                 selectPrevious();

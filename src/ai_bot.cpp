@@ -1,7 +1,33 @@
 #include "ai_bot.h"
-#include "input.h"
 #include <cmath>
 #include <algorithm>
+
+// Simple AI Input implementation
+class AIInput : public Input {
+public:
+    AIInput() : Input() {
+        forwardPressed = false;
+        backwardPressed = false;
+        leftPressed = false;
+        rightPressed = false;
+    }
+    
+    void setForward(bool val) { forwardPressed = val; }
+    void setBackward(bool val) { backwardPressed = val; }
+    void setLeft(bool val) { leftPressed = val; }
+    void setRight(bool val) { rightPressed = val; }
+    
+    bool isForward() const override { return forwardPressed; }
+    bool isBackward() const override { return backwardPressed; }
+    bool isLeft() const override { return leftPressed; }
+    bool isRight() const override { return rightPressed; }
+    
+private:
+    bool forwardPressed;
+    bool backwardPressed;
+    bool leftPressed;
+    bool rightPressed;
+};
 
 AIBot::AIBot(float x, float y, int difficulty)
     : difficulty(difficulty)
@@ -28,9 +54,6 @@ AIBot::AIBot(float x, float y, int difficulty)
 void AIBot::update(float deltaTime, const Track& track) {
     updateWaypoint(track);
     
-    // Create simulated input for AI
-    Input aiInput;
-    
     // Calculate direction to target
     float dx = targetX - car->getX();
     float dy = targetY - car->getY();
@@ -43,36 +66,23 @@ void AIBot::update(float deltaTime, const Track& track) {
     while (angleDiff > M_PI) angleDiff -= 2 * M_PI;
     while (angleDiff < -M_PI) angleDiff += 2 * M_PI;
     
-    // Simple AI controller
-    class AIInput : public Input {
-    public:
-        bool forward = false;
-        bool backward = false;
-        bool left = false;
-        bool right = false;
-        
-        bool isForward() const override { return forward; }
-        bool isBackward() const override { return backward; }
-        bool isLeft() const override { return left; }
-        bool isRight() const override { return right; }
-    };
-    
+    // Create AI input
     AIInput input;
-    input.forward = true; // Always accelerate
+    input.setForward(true); // Always accelerate
     
     // Steering based on difficulty
     float steerThreshold = 0.1f / difficulty; // Higher difficulty = more precise
     
     if (angleDiff > steerThreshold) {
-        input.right = true;
+        input.setRight(true);
     } else if (angleDiff < -steerThreshold) {
-        input.left = true;
+        input.setLeft(true);
     }
     
     // Slow down on sharp turns
     if (std::abs(angleDiff) > M_PI / 3) {
-        input.forward = false;
-        input.backward = true;
+        input.setForward(false);
+        input.setBackward(true);
     }
     
     car->update(deltaTime, input);

@@ -11,10 +11,10 @@ if(DEFINED ENV{VCPKG_ROOT})
         CACHE STRING "Vcpkg toolchain file")
 endif()
 
-# Find SDL3 and dependencies
-find_package(SDL3 REQUIRED CONFIG)
-find_package(SDL3_image REQUIRED CONFIG)
-find_package(SDL3_ttf REQUIRED CONFIG)
+# Find SDL2 and dependencies
+find_package(SDL2 REQUIRED CONFIG)
+find_package(SDL2_image REQUIRED CONFIG)
+find_package(SDL2_ttf REQUIRED CONFIG)
 find_package(nlohmann_json REQUIRED CONFIG)
 
 # Game executable
@@ -41,9 +41,9 @@ add_executable(racing_game
 )
 
 target_link_libraries(racing_game PRIVATE
-    SDL3::SDL3
-    SDL3_image::SDL3_image
-    SDL3_ttf::SDL3_ttf
+    SDL2::SDL2 SDL2::SDL2main
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
     nlohmann_json::nlohmann_json
 )
 
@@ -61,9 +61,9 @@ add_executable(map_editor
 )
 
 target_link_libraries(map_editor PRIVATE
-    SDL3::SDL3
-    SDL3_image::SDL3_image
-    SDL3_ttf::SDL3_ttf
+    SDL2::SDL2 SDL2::SDL2main
+    SDL2_image::SDL2_image
+    SDL2_ttf::SDL2_ttf
     nlohmann_json::nlohmann_json
 )
 

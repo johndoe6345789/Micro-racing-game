@@ -1,6 +1,6 @@
 # Micro Racing Game
 
-A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with SDL3 and C++.
+A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with SDL2 and C++.
 
 ## Features
 
@@ -27,9 +27,9 @@ A top-down 2D racing game inspired by Micro Machines and Hot Wheels, built with 
 
 ### Dependencies (managed by vcpkg)
 
-- SDL3
-- SDL3_image
-- SDL3_ttf
+- SDL2
+- SDL2_image
+- SDL2_ttf
 - nlohmann_json
 
 ### Build Instructions

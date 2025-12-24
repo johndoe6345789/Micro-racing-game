@@ -19,13 +19,14 @@ Game::~Game() {
 }
 
 bool Game::initialize() {
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
         return false;
     }
     
     window = SDL_CreateWindow(
         "Micro Racing Game",
+        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         screenWidth, screenHeight,
         SDL_WINDOW_RESIZABLE
     );
@@ -35,7 +36,7 @@ bool Game::initialize() {
         return false;
     }
     
-    sdlRenderer = SDL_CreateRenderer(window, nullptr);
+    sdlRenderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (!sdlRenderer) {
         std::cerr << "Renderer creation failed: " << SDL_GetError() << std::endl;
         return false;
@@ -73,7 +74,7 @@ void Game::run() {
 void Game::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_EVENT_QUIT) {
+        if (event.type == SDL_QUIT) {
             running = false;
             return;
         }
@@ -84,11 +85,11 @@ void Game::handleEvents() {
             input->handleEvent(event);
             
             // Pause with Escape key
-            if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 state = GameState::PAUSED;
             }
         } else if (state == GameState::PAUSED) {
-            if (event.type == SDL_EVENT_KEY_DOWN && event.key.key == SDLK_ESCAPE) {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
                 state = GameState::PLAYING;
             }
         }
